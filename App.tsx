@@ -17,8 +17,7 @@ import SettingsModal from './components/SettingsModal';
 import ImageGeneratorPage from './components/ImageGeneratorPage';
 import VideoGeneratorPage from './components/VideoGeneratorPage';
 import { userService } from './services/userService';
-import StrangerThingsIntro from './components/StrangerThingsIntro';
-import UpsideDownParticles from './components/UpsideDownParticles';
+
 import { ThemeContext } from './contexts/ThemeContext';
 import { useContext } from 'react';
 
@@ -33,23 +32,7 @@ const App: React.FC = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
 
 
-  // Intro state
-  const { theme } = useContext(ThemeContext);
-  const [showIntro, setShowIntro] = useState(false);
 
-  useEffect(() => {
-    // Show intro if the current theme is strangerThings
-    // You might want to add a session check here if you only want it to run once per session
-    if (theme.id === 'strangerThings') {
-      setShowIntro(true);
-    } else {
-      setShowIntro(false);
-    }
-  }, [theme.id]);
-
-  const handleIntroComplete = () => {
-    setShowIntro(false);
-  };
   useEffect(() => {
     const loggedInUserId = localStorage.getItem('loggedInUserId');
     if (loggedInUserId) {
@@ -185,8 +168,6 @@ const App: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] relative">
-      {theme.id === 'strangerThings' && <UpsideDownParticles />}
-      {showIntro && <StrangerThingsIntro onComplete={handleIntroComplete} />}
       {currentUser && <Navbar user={currentUser} onNavigate={setCurrentPage} onLogout={handleLogout} currentPage={currentPage} onOpenSettings={() => setIsSettingsModalOpen(true)} />}
       {!currentUser && currentPage === 'leaderboard' && (
         <header className="w-full bg-[var(--color-secondary)] border-b-2 border-[var(--color-text)] shadow-md h-20 flex items-center justify-center">
@@ -207,7 +188,7 @@ const App: React.FC = () => {
         {renderPage()}
       </main>
       <Footer />
-    </div>
+    </div >
   );
 };
 

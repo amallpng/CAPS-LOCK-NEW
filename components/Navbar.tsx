@@ -3,7 +3,7 @@ import { User, Page } from '../types';
 import Logo from './icons/Logo';
 import Avatar from './Avatar';
 import CoinIcon from './icons/CoinIcon';
-import { ThemeContext } from '../contexts/ThemeContext';
+
 
 interface NavbarProps {
     user: User;
@@ -14,7 +14,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ user, onNavigate, onLogout, currentPage, onOpenSettings }) => {
-    const { theme } = useContext(ThemeContext);
+
 
     // A single source of truth for navigation links.
     // Guests can see challenge/leaderboard pages but will get an access denied message on those pages.
@@ -52,11 +52,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, onNavigate, onLogout, currentPage
             <nav className="container mx-auto px-4 flex justify-between items-center h-20">
                 <div className="flex items-center gap-8">
                     <button onClick={() => onNavigate('practice')} className="flex items-center gap-2 h-12">
-                        {theme.id === 'strangerThings' ? (
-                            <img src="/assets/stranger_things_logo_wide.png" alt="Stranger Things X Caps Lock" className="h-full w-auto object-contain" />
-                        ) : (
-                            <Logo className="h-full w-auto" />
-                        )}
+                        <Logo className="h-full w-auto" />
                     </button>
                     {/* Desktop Links */}
                     <div className="hidden md:flex items-center gap-6">
