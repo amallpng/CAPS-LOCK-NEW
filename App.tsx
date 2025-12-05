@@ -18,6 +18,7 @@ import ImageGeneratorPage from './components/ImageGeneratorPage';
 import VideoGeneratorPage from './components/VideoGeneratorPage';
 import { userService } from './services/userService';
 import StrangerThingsIntro from './components/StrangerThingsIntro';
+import UpsideDownParticles from './components/UpsideDownParticles';
 import { ThemeContext } from './contexts/ThemeContext';
 import { useContext } from 'react';
 
@@ -183,7 +184,8 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+    <div className="flex flex-col min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] relative">
+      {theme.id === 'strangerThings' && <UpsideDownParticles />}
       {showIntro && <StrangerThingsIntro onComplete={handleIntroComplete} />}
       {currentUser && <Navbar user={currentUser} onNavigate={setCurrentPage} onLogout={handleLogout} currentPage={currentPage} onOpenSettings={() => setIsSettingsModalOpen(true)} />}
       {!currentUser && currentPage === 'leaderboard' && (

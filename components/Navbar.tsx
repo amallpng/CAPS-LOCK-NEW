@@ -53,7 +53,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, onNavigate, onLogout, currentPage
                 <div className="flex items-center gap-8">
                     <button onClick={() => onNavigate('practice')} className="flex items-center gap-2 h-12">
                         {theme.id === 'strangerThings' ? (
-                            <img src="/assets/stranger_things_logo.png" alt="Stranger Things X Caps Lock" className="h-full w-auto object-contain" />
+                            <img src="/assets/stranger_things_logo_wide.png" alt="Stranger Things X Caps Lock" className="h-full w-auto object-contain" />
                         ) : (
                             <Logo className="h-full w-auto" />
                         )}

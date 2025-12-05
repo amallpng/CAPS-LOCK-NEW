@@ -20,7 +20,9 @@ const StrangerThingsIntro: React.FC<{ onComplete: () => void }> = ({ onComplete 
         
         .st-container {
           position: relative;
-          perspective: 3000px;
+          perspective: 1000px;
+          transform-style: preserve-3d;
+          animation: pivot 4s ease-out forwards;
         }
 
         .st-title {
@@ -31,54 +33,23 @@ const StrangerThingsIntro: React.FC<{ onComplete: () => void }> = ({ onComplete 
           letter-spacing: -0.5rem;
           -webkit-text-stroke: 2px #C12C1F;
           text-shadow: 0 0 30px rgba(193, 44, 31, 0.5);
+          transform: rotateX(20deg); 
           animation: 
-            zoomIn 3.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
+            zoomIn 4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
             glow 2s ease-in-out infinite alternate;
         }
 
-        .st-title span {
-          display: inline-block;
-          opacity: 0;
-          animation: drift 3.5s ease-out forwards, fadeIn 1s ease-in forwards;
-        }
-
-        /* Animation Delays for each letter to create the "coming together" effect */
-        /* Animation Delays for each letter to create the "coming together" effect */
-        .st-title span:nth-child(1) { animation-delay: 0.1s; transform: translateX(-100px) scale(0.8); }
-        .st-title span:nth-child(2) { animation-delay: 0.3s; transform: translateY(-100px) scale(1.2); }
-        .st-title span:nth-child(3) { animation-delay: 0.5s; transform: translateX(100px) scale(0.9); }
-        .st-title span:nth-child(4) { animation-delay: 0.2s; transform: translateY(100px) scale(1.1); }
-        .st-title span:nth-child(5) { animation-delay: 0.4s; transform: translateX(-50px) scale(1.05); }
-        .st-title span:nth-child(6) { animation-delay: 0.6s; transform: translateY(-50px) scale(0.95); }
-        .st-title span:nth-child(7) { animation-delay: 0.35s; transform: translateX(50px) scale(1.1); }
-        .st-title span:nth-child(8) { animation-delay: 0.55s; transform: translateY(50px) scale(0.85); }
-        
-        .st-bar {
-          position: absolute;
-          width: 100vw;
-          height: 5px;
-          background: #C12C1F;
-          box-shadow: 0 0 20px #C12C1F;
-          opacity: 0;
-        }
-        
-        .st-bar.top {
-          top: 20%;
-          left: -100%;
-          animation: slideRight 3s ease-out forwards;
-        }
-        
-        .st-bar.bottom {
-          bottom: 20%;
-          right: -100%;
-          animation: slideLeft 3s ease-out forwards;
+        @keyframes pivot {
+            0% { transform: rotateY(15deg) rotateX(10deg); }
+            100% { transform: rotateY(0deg) rotateX(0deg); }
         }
 
         @keyframes zoomIn {
-          0% { transform: scale(10); opacity: 0; }
-          100% { transform: scale(1); opacity: 1; }
+          0% { transform: scale(20) translateZ(1000px); opacity: 0; }
+          100% { transform: scale(1) translateZ(0); opacity: 1; }
         }
-
+        
+        /* ... existing keyframes ... */
         @keyframes drift {
           0% { filter: blur(10px); }
           100% { transform: translate(0, 0) scale(1); filter: blur(0); opacity: 1; }

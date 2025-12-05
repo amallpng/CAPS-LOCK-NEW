@@ -13,7 +13,7 @@ export const themes: Theme[] = [
       error: '#FF0000',
       'text-muted': '#888888',
     },
-    backgroundImage: '/assets/stranger_things_bg_pixel.png',
+    backgroundImage: '/assets/upside_down_bg.png',
   },
 
   {
