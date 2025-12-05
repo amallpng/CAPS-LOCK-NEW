@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64' fill='none'%3e%3cpath d='M18 8H46V28H18V8Z' fill='%23F1EFE9' stroke='%23282828' stroke-width='2' /%3e%3cpath d='M22 14H42' stroke='%23282828' stroke-width='2' stroke-opacity='0.4' stroke-linecap='round' /%3e%3cpath d='M22 18H38' stroke='%23282828' stroke-width='2' stroke-opacity='0.4' stroke-linecap='round' /%3e%3cpath d='M22 22H42' stroke='%23282828' stroke-width='2' stroke-opacity='0.4' stroke-linecap='round' /%3e%3cpath d='M12 26H52C53.1046 26 54 26.8954 54 28V28C54 29.1046 53.1046 30 52 30H12C10.8954 30 10 29.1046 10 28V28C10 26.8954 10.8954 26 12 26Z' fill='%236B7280' /%3e%3cpath d='M8 32H56V48C56 50.2091 54.2091 52 52 52H12C9.79086 52 8 50.2091 8 48V32Z' fill='%234A6B69' /%3e%3cpath d='M12 34C12 32.8954 12.8954 32 14 32H50C51.1046 32 52 32.8954 52 34V36H12V34Z' fill='%23282828' fill-opacity='0.2'/%3e%3ccircle cx='18' cy='40' r='2' fill='%23D3CFC2' /%3e%3ccircle cx='26' cy='40' r='2' fill='%23D3CFC2' /%3e%3ccircle cx='34' cy='40' r='2' fill='%23D3CFC2' /%3e%3ccircle cx='42' cy='40' r='2' fill='%23D3CFC2' /%3e%3ccircle cx='50' cy='40' r='2' fill='%23D3CFC2' /%3e%3ccircle cx='22' cy='46' r='2' fill='%23D3CFC2' /%3e%3ccircle cx='30' cy='46' r='2' fill='%23D3CFC2' /%3e%3ccircle cx='38' cy='46' r='2' fill='%23D3CFC2' /%3e%3ccircle cx='46' cy='46' r='2' fill='%23D3CFC2' /%3e%3crect x='24' y='50' width='20' height='4' rx='2' fill='%23D3CFC2' /%3e%3c/svg%3e" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CAPS LOCK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --color-bg: #F1EFE9;
+        --color-text: #282828;
+        --color-primary: #4A6B69;
+        --color-secondary: #D3CFC2;
+        --color-border: #A9A391;
+        --color-error: #9A3B3B;
+        --color-text-muted: #6B7280;
+      }
+      body {
+        font-family: 'Special Elite', monospace;
+        background-color: var(--color-bg);
+        color: var(--color-text);
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .caret-char {
+        background-color: var(--color-text);
+        color: var(--color-bg);
+        border-radius: 1px;
+        animation: blink-caret-bg 1s infinite;
+      }
+      @keyframes blink-caret-bg {
+        0%, 100% {
+          background-color: var(--color-text);
+          color: var(--color-bg);
+        }
+        50% {
+          background-color: transparent;
+          color: var(--color-text);
+        }
+      }
+      .badge-animation {
+        animation: badge-intro 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+      }
+      @keyframes badge-intro {
+        0% {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .badge-pulse {
+        animation: badge-pulse-effect 3s ease-in-out infinite;
+      }
+      @keyframes badge-pulse-effect {
+        0%, 100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.04);
+        }
+      }
+      .btn-vintage {
+        background-color: var(--color-primary);
+        color: var(--color-bg);
+        border: 2px solid var(--color-text);
+        box-shadow: 2px 2px 0px var(--color-text);
+        transition: all 0.1s ease-in-out;
+      }
+      .btn-vintage:hover {
+        transform: translate(1px, 1px);
+        box-shadow: 1px 1px 0px var(--color-text);
+      }
+      .btn-vintage:active {
+        transform: translate(2px, 2px);
+        box-shadow: none;
+      }
+      .animate-fade-in {
+        animation: fade-in 0.5s ease-in-out;
+      }
+      @keyframes fade-in {
+        from { opacity: 0; transform: scale(0.98); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      @keyframes highlight-border {
+        0%, 100% { border-color: transparent; }
+        50% { border-color: var(--color-primary); }
+      }
+      .animate-highlight {
+        animation: highlight-border 2s ease-in-out 1;
+      }
+      @keyframes avatar-bob {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-1.5px);
+        }
+      }
+      .avatar-animate {
+        animation: avatar-bob 3s ease-in-out infinite;
+      }
+      @keyframes coin-float-up {
+        0% {
+          opacity: 0;
+          transform: translateY(10px) translateX(-50%);
+        }
+        20% {
+          opacity: 1;
+          transform: translateY(0) translateX(-50%);
+        }
+        80% {
+          opacity: 1;
+          transform: translateY(0) translateX(-50%);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-15px) translateX(-50%);
+        }
+      }
+      .animate-coin-float {
+        animation: coin-float-up 2.5s ease-in-out forwards;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.0",
+    "pyodide": "https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.mjs"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
