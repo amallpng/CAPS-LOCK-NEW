@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { User } from '../types';
 import { avatarOptions } from './icons/AvatarIcons';
 import { LogoIcon } from './icons/Logo';
+import { userService } from '../services/userService';
 
 interface RegisterPageProps {
   onRegisterSuccess: () => void;
@@ -14,15 +15,10 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ onRegisterSuccess, onSwitch
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setError('Passwords do not match');
-      return;
-    }
-    const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
-    if (users.some(u => u.username === username)) {
-      setError('Username already exists');
       return;
     }
 
@@ -49,12 +45,17 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ onRegisterSuccess, onSwitch
         attemptsToday: 0,
         lastAttemptTimestamp: 0,
       },
+      isBlocked: false,
     };
 
-    users.push(newUser);
-    localStorage.setItem('users', JSON.stringify(users));
-    setError('');
-    onRegisterSuccess();
+    const result = await userService.register(newUser);
+
+    if (result.success) {
+      setError('');
+      onRegisterSuccess();
+    } else {
+      setError(result.message || 'Registration failed');
+    }
   };
 
   return (

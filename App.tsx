@@ -16,6 +16,7 @@ import TutorialModal from './components/TutorialModal';
 import SettingsModal from './components/SettingsModal';
 import ImageGeneratorPage from './components/ImageGeneratorPage';
 import VideoGeneratorPage from './components/VideoGeneratorPage';
+import { userService } from './services/userService';
 
 const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -23,7 +24,7 @@ const App: React.FC = () => {
   const [isChallengeModalOpen, setIsChallengeModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-  
+
   const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
@@ -35,20 +36,20 @@ const App: React.FC = () => {
       if (loggedInUser) {
         // Data migration for python challenge progress
         if (loggedInUser.pythonChallengeProgress) {
-            if ('code' in loggedInUser.pythonChallengeProgress) {
-              const newProgress = { currentLevel: loggedInUser.pythonChallengeProgress.currentLevel };
-              loggedInUser.pythonChallengeProgress = newProgress;
-            }
-            if (loggedInUser.pythonChallengeProgress.attemptsToday === undefined) {
-                loggedInUser.pythonChallengeProgress.attemptsToday = 0;
-            }
-            if (loggedInUser.pythonChallengeProgress.lastAttemptTimestamp === undefined) {
-                loggedInUser.pythonChallengeProgress.lastAttemptTimestamp = 0;
-            }
+          if ('code' in loggedInUser.pythonChallengeProgress) {
+            const newProgress = { currentLevel: loggedInUser.pythonChallengeProgress.currentLevel };
+            loggedInUser.pythonChallengeProgress = newProgress;
+          }
+          if (loggedInUser.pythonChallengeProgress.attemptsToday === undefined) {
+            loggedInUser.pythonChallengeProgress.attemptsToday = 0;
+          }
+          if (loggedInUser.pythonChallengeProgress.lastAttemptTimestamp === undefined) {
+            loggedInUser.pythonChallengeProgress.lastAttemptTimestamp = 0;
+          }
         } else {
-            loggedInUser.pythonChallengeProgress = { currentLevel: 1, attemptsToday: 0, lastAttemptTimestamp: 0 };
+          loggedInUser.pythonChallengeProgress = { currentLevel: 1, attemptsToday: 0, lastAttemptTimestamp: 0 };
         }
-        
+
         const { password, ...userToLogin } = loggedInUser;
         setCurrentUser(userToLogin as User);
         setCurrentPage('practice');
@@ -63,7 +64,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (showOnboarding) {
-        setIsTutorialModalOpen(true);
+      setIsTutorialModalOpen(true);
     }
   }, [showOnboarding]);
 
@@ -74,7 +75,7 @@ const App: React.FC = () => {
       localStorage.setItem('loggedInUserId', user.id);
     }
     if (user.isFirstLogin === true && !user.isGuest) {
-        setShowOnboarding(true);
+      setShowOnboarding(true);
     }
     setCurrentPage('practice');
   };
@@ -85,18 +86,12 @@ const App: React.FC = () => {
     setCurrentPage('login');
   }, []);
 
-  const handleUserUpdate = (updatedUser: User) => {
+  const handleUserUpdate = async (updatedUser: User) => {
     setCurrentUser(updatedUser);
     if (updatedUser.isGuest) {
       return;
     }
-    const allUsers: User[] = JSON.parse(localStorage.getItem('users') || '[]');
-    const userIndex = allUsers.findIndex(u => u.id === updatedUser.id);
-    if (userIndex !== -1) {
-      const existingUser = allUsers[userIndex];
-      allUsers[userIndex] = { ...existingUser, ...updatedUser };
-      localStorage.setItem('users', JSON.stringify(allUsers));
-    }
+    await userService.syncUser(updatedUser);
   };
 
   const handleTutorialFinish = () => {
@@ -108,11 +103,11 @@ const App: React.FC = () => {
   const handleChallengeSignup = (name: string, email: string) => {
     if (!currentUser) return;
     const updatedUser = {
-        ...currentUser,
-        username: name,
-        email: email,
-        isFirstLogin: false,
-        isChallengeParticipant: true,
+      ...currentUser,
+      username: name,
+      email: email,
+      isFirstLogin: false,
+      isChallengeParticipant: true,
     };
     handleUserUpdate(updatedUser);
     setIsChallengeModalOpen(false);
@@ -121,8 +116,8 @@ const App: React.FC = () => {
   const handleChallengeSkip = () => {
     if (!currentUser) return;
     const updatedUser = {
-        ...currentUser,
-        isFirstLogin: false,
+      ...currentUser,
+      isFirstLogin: false,
     };
     handleUserUpdate(updatedUser);
     setIsChallengeModalOpen(false);
@@ -133,7 +128,7 @@ const App: React.FC = () => {
     if (!currentUser) {
       // Allow public access to leaderboard
       if (currentPage === 'leaderboard') {
-         return <LeaderboardPage currentUser={null} onBack={() => setCurrentPage('login')} />;
+        return <LeaderboardPage currentUser={null} onBack={() => setCurrentPage('login')} />;
       }
 
       switch (currentPage) {
@@ -170,18 +165,18 @@ const App: React.FC = () => {
     <div className="flex flex-col min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
       {currentUser && <Navbar user={currentUser} onNavigate={setCurrentPage} onLogout={handleLogout} currentPage={currentPage} onOpenSettings={() => setIsSettingsModalOpen(true)} />}
       {!currentUser && currentPage === 'leaderboard' && (
-          <header className="w-full bg-[var(--color-secondary)] border-b-2 border-[var(--color-text)] shadow-md h-20 flex items-center justify-center">
-              <span style={{ fontFamily: "'Special Elite', monospace", fontSize: '150%', fontWeight: 'normal', color: 'var(--color-text)' }}>CAPS LOCK</span>
-          </header>
+        <header className="w-full bg-[var(--color-secondary)] border-b-2 border-[var(--color-text)] shadow-md h-20 flex items-center justify-center">
+          <span style={{ fontFamily: "'Special Elite', monospace", fontSize: '150%', fontWeight: 'normal', color: 'var(--color-text)' }}>CAPS LOCK</span>
+        </header>
       )}
       <main className="flex-grow container mx-auto px-4 py-8 flex flex-col items-center justify-center">
         {isTutorialModalOpen && <TutorialModal onClose={handleTutorialFinish} />}
         {isChallengeModalOpen && currentUser && (
-            <ChallengeSignupModal
-                user={currentUser}
-                onSignup={handleChallengeSignup}
-                onClose={handleChallengeSkip}
-            />
+          <ChallengeSignupModal
+            user={currentUser}
+            onSignup={handleChallengeSignup}
+            onClose={handleChallengeSkip}
+          />
         )}
         {isPrivacyModalOpen && <PrivacyPolicyModal onClose={() => setIsPrivacyModalOpen(false)} />}
         {isSettingsModalOpen && <SettingsModal onClose={() => setIsSettingsModalOpen(false)} />}

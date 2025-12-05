@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { User } from '../types';
 import { avatarOptions } from './icons/AvatarIcons';
 import { LogoIcon } from './icons/Logo';
+import { userService } from '../services/userService';
 
 interface LoginPageProps {
   onLogin: (user: User) => void;
@@ -10,12 +11,12 @@ interface LoginPageProps {
 }
 
 const GoogleIcon = () => (
-    <svg className="w-5 h-5" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-      <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039L38.804 12.16C34.522 8.246 29.637 6 24 6C12.955 6 4 14.955 4 26s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z" />
-      <path fill="#FF3D00" d="M6.306 14.691c-1.229 2.503-1.956 5.342-1.956 8.309c0 2.967.727 5.806 1.956 8.309L14.07 35.703C11.312 32.66 9.688 28.53 9.688 24c0-4.53 1.624-8.66 4.382-11.703L6.306 14.691z" />
-      <path fill="#4CAF50" d="M24 46c5.637 0 10.522-1.846 14.07-4.99l-7.764-5.693c-2.115 1.423-4.821 2.273-7.806 2.273c-5.22 0-9.657-3.351-11.303-7.962L4.382 35.703C8.136 42.012 15.426 46 24 46z" />
-      <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571l7.764 5.693c4.73-4.34 7.227-10.824 7.227-18.263c0-1.341-.138-2.65-.389-3.917z" />
-    </svg>
+  <svg className="w-5 h-5" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039L38.804 12.16C34.522 8.246 29.637 6 24 6C12.955 6 4 14.955 4 26s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z" />
+    <path fill="#FF3D00" d="M6.306 14.691c-1.229 2.503-1.956 5.342-1.956 8.309c0 2.967.727 5.806 1.956 8.309L14.07 35.703C11.312 32.66 9.688 28.53 9.688 24c0-4.53 1.624-8.66 4.382-11.703L6.306 14.691z" />
+    <path fill="#4CAF50" d="M24 46c5.637 0 10.522-1.846 14.07-4.99l-7.764-5.693c-2.115 1.423-4.821 2.273-7.806 2.273c-5.22 0-9.657-3.351-11.303-7.962L4.382 35.703C8.136 42.012 15.426 46 24 46z" />
+    <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571l7.764 5.693c4.73-4.34 7.227-10.824 7.227-18.263c0-1.341-.138-2.65-.389-3.917z" />
+  </svg>
 );
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onSwitchToRegister, onShowLeaderboard }) => {
@@ -25,38 +26,38 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onSwitchToRegister, onSh
   const [error, setError] = useState('');
   const [isGoogleLogin, setIsGoogleLogin] = useState(false);
 
-  const handleLocalSubmit = (e: React.FormEvent) => {
+  const handleLocalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
-    const user = users.find(u => u.username === username && u.password === password && (u.provider === 'local' || !u.provider));
+    const user = await userService.login(username, password);
+
     if (user) {
       if (user.isBlocked) {
         setError('Your account has been blocked by an administrator.');
         return;
       }
       setError('');
-      const { password, ...userToLogin } = user;
+      const { password: pw, ...userToLogin } = user;
       onLogin(userToLogin as User);
     } else {
-      setError('Invalid username or password for a local account.');
+      setError('Invalid username or password.');
     }
   };
 
   const handleGoogleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
+
     if (!/\S+@\S+\.\S+/.test(email)) {
-        setError("Please enter a valid email address.");
-        return;
+      setError("Please enter a valid email address.");
+      return;
     }
 
     const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
     let googleUser = users.find(u => u.provider === 'google' && u.email === email);
 
     if (googleUser && googleUser.isBlocked) {
-        setError('Your account has been blocked by an administrator.');
-        return;
+      setError('Your account has been blocked by an administrator.');
+      return;
     }
 
     if (!googleUser) {
@@ -89,7 +90,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onSwitchToRegister, onSh
       localStorage.setItem('users', JSON.stringify(users));
       googleUser = newGoogleUser;
     }
-    
+
     const { password, ...userToLogin } = googleUser;
     onLogin(userToLogin as User);
   };
@@ -97,21 +98,21 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onSwitchToRegister, onSh
   const handleGuestLogin = () => {
     const randomAvatar = avatarOptions[Math.floor(Math.random() * avatarOptions.length)];
     const guestUser: User = {
-        id: `guest-${Date.now()}`,
-        username: 'Guest',
-        isGuest: true,
-        profilePic: randomAvatar,
-        completedTasks: [],
-        bestWpm: 0,
-        streak: 0,
-        lastTestDate: '',
-        testHistory: [],
-        coins: 0,
-        pythonChallengeProgress: {
-            currentLevel: 1,
-            attemptsToday: 0,
-            lastAttemptTimestamp: 0,
-        },
+      id: `guest-${Date.now()}`,
+      username: 'Guest',
+      isGuest: true,
+      profilePic: randomAvatar,
+      completedTasks: [],
+      bestWpm: 0,
+      streak: 0,
+      lastTestDate: '',
+      testHistory: [],
+      coins: 0,
+      pythonChallengeProgress: {
+        currentLevel: 1,
+        attemptsToday: 0,
+        lastAttemptTimestamp: 0,
+      },
     };
     onLogin(guestUser);
   };
@@ -188,13 +189,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onSwitchToRegister, onSh
               Login
             </button>
           </form>
-          
+
           <div className="my-6 flex items-center">
             <div className="flex-grow border-t border-[var(--color-border)]"></div>
             <span className="flex-shrink mx-4 text-[var(--color-text-muted)]">OR</span>
             <div className="flex-grow border-t border-[var(--color-border)]"></div>
           </div>
-          
+
           <div className="space-y-3">
             <button
               type="button"
@@ -205,11 +206,11 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onSwitchToRegister, onSh
               Login with Google
             </button>
             <button
-                type="button"
-                onClick={handleGuestLogin}
-                className="w-full flex items-center justify-center gap-3 bg-transparent text-[var(--color-text-muted)] font-semibold py-2 px-4 rounded-sm border-2 border-dashed border-[var(--color-border)] hover:bg-[var(--color-secondary)]/50 hover:text-[var(--color-text)] transition-colors"
+              type="button"
+              onClick={handleGuestLogin}
+              className="w-full flex items-center justify-center gap-3 bg-transparent text-[var(--color-text-muted)] font-semibold py-2 px-4 rounded-sm border-2 border-dashed border-[var(--color-border)] hover:bg-[var(--color-secondary)]/50 hover:text-[var(--color-text)] transition-colors"
             >
-                Login as Guest
+              Login as Guest
             </button>
           </div>
 
