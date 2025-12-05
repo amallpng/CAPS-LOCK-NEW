@@ -30,8 +30,7 @@ export const userService = {
         return this.getLocalUsers();
     },
 
-    /**
-     * Upsert a user's progress to the global database.
+
 
     /**
      * Attempt to login a user by username and password.
@@ -121,9 +120,20 @@ export const userService = {
 
         // 2. Sync to Supabase
         if (isSupabaseConfigured()) {
+            const payload = {
+                id: user.id,
+                username: user.username,
+                password: user.password,
+                coins: user.coins,
+                bestWpm: user.bestWpm,
+                profilePic: user.profilePic,
+                streak: user.streak,
+                python_progress: user.pythonChallengeProgress
+            };
+
             const { error } = await supabase
                 .from(TABLE_NAME)
-                .upsert(user, { onConflict: 'id' });
+                .upsert(payload, { onConflict: 'id' });
 
             if (error) {
                 console.error('Error syncing user to Supabase:', error);
