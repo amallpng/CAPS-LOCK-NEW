@@ -9,24 +9,33 @@ interface ThemeContextType {
 
 export const ThemeContext = createContext<ThemeContextType>({
   theme: themes[0],
-  setThemeById: () => {},
+  setThemeById: () => { },
 });
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [themeId, setThemeId] = useState(() => {
     try {
       const storedThemeId = localStorage.getItem('theme-id');
-      return storedThemeId && themes.find(t => t.id === storedThemeId) ? storedThemeId : 'typewriter';
+      // Default to 'strangerThings' if not set
+      return storedThemeId && themes.find(t => t.id === storedThemeId) ? storedThemeId : 'strangerThings';
     } catch {
-      return 'typewriter';
+      return 'strangerThings';
     }
   });
 
   const applyTheme = useCallback((themeToApply: Theme) => {
     const root = document.documentElement;
     Object.entries(themeToApply.colors).forEach(([key, value]) => {
-        root.style.setProperty(`--color-${key}`, value);
+      root.style.setProperty(`--color-${key}`, value);
     });
+    if (themeToApply.backgroundImage) {
+      document.body.style.backgroundImage = `url(${themeToApply.backgroundImage})`;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundAttachment = 'fixed';
+    } else {
+      document.body.style.backgroundImage = 'none';
+    }
   }, []);
 
   useEffect(() => {

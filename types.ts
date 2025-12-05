@@ -54,7 +54,7 @@ export interface Task {
 }
 
 export interface Theme {
-  id:string;
+  id: string;
   name: string;
   colors: {
     bg: string;
@@ -65,6 +65,8 @@ export interface Theme {
     error: string;
     'text-muted': string;
   };
+  backgroundImage?: string;
+
 }
 
 export interface PrizeClaim {

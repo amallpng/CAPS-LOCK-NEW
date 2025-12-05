@@ -113,5 +113,21 @@ export const userService = {
 
         // Also update loggedInUserId if it matches
         // (App handles state, this just handles persistence)
+    },
+
+    async syncUser(user: User): Promise<void> {
+        // 1. Save Local
+        this.saveLocalUser(user);
+
+        // 2. Sync to Supabase
+        if (isSupabaseConfigured()) {
+            const { error } = await supabase
+                .from(TABLE_NAME)
+                .upsert(user, { onConflict: 'id' });
+
+            if (error) {
+                console.error('Error syncing user to Supabase:', error);
+            }
+        }
     }
 };
