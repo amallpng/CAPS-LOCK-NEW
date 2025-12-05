@@ -3,12 +3,12 @@ import { User, Task } from '../types';
 import { PYTHON_CHALLENGES, PythonChallenge } from '../services/pythonChallengeService';
 import Badge from './Badge';
 import CoinIcon from './icons/CoinIcon';
-import PythonIDE from './PythonIDE';
+
 
 const LearnPythonPage: React.FC<{ user: User; onUserUpdate: (user: User) => void; }> = ({ user, onUserUpdate }) => {
     const [activeChallenge, setActiveChallenge] = useState<PythonChallenge | null>(null);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-    const [codeOutput, setCodeOutput] = useState('');
+
     const [isAnswered, setIsAnswered] = useState(false);
     const [feedback, setFeedback] = useState<{ type: 'correct' | 'incorrect'; message: string } | null>(null);
     const [showRewardModal, setShowRewardModal] = useState<PythonChallenge | null>(null);
@@ -99,7 +99,6 @@ const LearnPythonPage: React.FC<{ user: User; onUserUpdate: (user: User) => void
         const challenge = PYTHON_CHALLENGES.find(c => c.level === level) || null;
         setActiveChallenge(challenge);
         setSelectedAnswer(null);
-        setCodeOutput('');
         setIsAnswered(false);
         setFeedback(null);
     }, []);
@@ -114,16 +113,11 @@ const LearnPythonPage: React.FC<{ user: User; onUserUpdate: (user: User) => void
 
         let correct = false;
 
-        if (activeChallenge.expectedOutput) {
-            // Coding challenge
-            const normalizedOutput = codeOutput.trim();
-            const normalizedExpected = activeChallenge.expectedOutput.trim();
-            correct = normalizedOutput === normalizedExpected;
-        } else if (selectedAnswer !== null && activeChallenge.correctAnswerIndex !== undefined) {
+        if (selectedAnswer !== null && activeChallenge.correctAnswerIndex !== undefined) {
             // Multiple choice
             correct = selectedAnswer === activeChallenge.correctAnswerIndex;
         } else {
-            return; // Nothing selected/typed
+            return; // Nothing selected
         }
 
         setIsAnswered(true);
@@ -225,7 +219,7 @@ const LearnPythonPage: React.FC<{ user: User; onUserUpdate: (user: User) => void
 
     const renderActionButton = () => {
         if (!isAnswered) {
-            const disabled = activeChallenge?.expectedOutput ? false : selectedAnswer === null;
+            const disabled = selectedAnswer === null;
             return (
                 <button onClick={handleSubmit} disabled={disabled} className="w-full btn-vintage font-bold py-3 px-4 rounded-sm text-lg disabled:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed">
                     Submit Answer
@@ -355,28 +349,18 @@ const LearnPythonPage: React.FC<{ user: User; onUserUpdate: (user: User) => void
                                 </pre>
                             )}
 
-                            {activeChallenge.expectedOutput ? (
-                                <div className="mb-6">
-                                    <PythonIDE
-                                        initialCode={activeChallenge.initialCode}
-                                        onOutputChange={setCodeOutput}
-                                        readOnly={isAnswered && feedback?.type === 'correct'}
-                                    />
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                                    {activeChallenge.options?.map((option, index) => (
-                                        <button
-                                            key={index}
-                                            onClick={() => setSelectedAnswer(index)}
-                                            disabled={isAnswered}
-                                            className={`p-4 text-left font-mono text-base rounded-sm border-2 transition-all duration-300 ${getOptionClass(index)}`}
-                                        >
-                                            {option}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                {activeChallenge.options?.map((option, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setSelectedAnswer(index)}
+                                        disabled={isAnswered}
+                                        className={`p-4 text-left font-mono text-base rounded-sm border-2 transition-all duration-300 ${getOptionClass(index)}`}
+                                    >
+                                        {option}
+                                    </button>
+                                ))}
+                            </div>
 
                             <div className="h-10 relative mb-2">
                                 {coinNotification && (

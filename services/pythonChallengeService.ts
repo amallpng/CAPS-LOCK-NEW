@@ -6,10 +6,8 @@ export interface PythonChallenge {
     topicExplanation: string;
     question: string;
     codeSnippet?: string | null;
-    options?: string[];
-    correctAnswerIndex?: number;
-    expectedOutput?: string;
-    initialCode?: string;
+    options: string[];
+    correctAnswerIndex: number;
     explanation: string;
     example?: string | null;
     coinReward?: number;
@@ -25,10 +23,15 @@ export const PYTHON_CHALLENGES: PythonChallenge[] = [
         level: 1,
         title: "Hello, World!",
         topicExplanation: "In Python, we use the `print()` function to show text, numbers, or other information on the screen. It's one of the most basic and useful commands for seeing the result of your code.",
-        question: "Write a line of code to print the text 'Hello, Python!' to the console.",
-        initialCode: "# Write your code below\n",
-        expectedOutput: "Hello, Python!",
-        explanation: "In Python, the `print()` function is used to output text to the console. The text you want to print (a 'string') should be enclosed in single (' ') or double (\" \") quotes.",
+        question: "Which line of code correctly prints 'Hello, Python!' to the console?",
+        options: [
+            "print 'Hello, Python!'",
+            "p('Hello, Python!')",
+            "print(\"Hello, Python!\")",
+            "echo \"Hello, Python!\""
+        ],
+        correctAnswerIndex: 2,
+        explanation: "In Python 3, the `print()` function requires parentheses. The text you want to print must be enclosed in quotes.",
         example: `print("This is a simple example.")\nprint('You can use single quotes too.')`,
         coinReward: 1
     },
@@ -36,10 +39,15 @@ export const PYTHON_CHALLENGES: PythonChallenge[] = [
         level: 2,
         title: "Variables",
         topicExplanation: "Think of variables as containers or labels for storing data. You give a variable a name and use the equals sign (`=`) to put a value inside it. This lets you save information to use later in your program.",
-        question: "Create a variable named `message` and assign it the text 'Learning is fun'. Then, print the variable.",
-        initialCode: "# Create the variable and print it\n",
-        expectedOutput: "Learning is fun",
-        explanation: "Python is dynamically typed, which means you don't need to declare the type of a variable. You simply use the variable name, followed by the assignment operator (`=`), and then the value.",
+        question: "Which of the following correctly creates a variable named `message`?",
+        options: [
+            "message = \"Learning is fun\"",
+            "val message = \"Learning is fun\"",
+            "var message = \"Learning is fun\"",
+            "message: \"Learning is fun\""
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Python is dynamically typed, so you don't need keywords like `var` or `val`. You simply assign a value to a name using `=`.",
         example: `user_name = "Alice"\nuser_age = 30\nprint(user_name)\nprint(user_age)`,
         coinReward: 0
     },
@@ -47,10 +55,15 @@ export const PYTHON_CHALLENGES: PythonChallenge[] = [
         level: 3,
         title: "Basic Arithmetic",
         topicExplanation: "Python can be used as a powerful calculator. It understands common math operators like `+` (add), `-` (subtract), `*` (multiply), and `/` (divide). It also follows the standard order of operations (PEMDAS/BODMAS).",
-        question: "Calculate `10` plus `5` multiplied by `3` and print the result.",
-        initialCode: "# Calculate and print the result\n",
-        expectedOutput: "25",
-        explanation: "Python follows the standard order of operations (PEMDAS/BODMAS). Multiplication (`*`) is performed before addition (`+`). So, `5 * 3` is calculated first (15), and then `10` is added to the result, giving `25`.",
+        question: "What is the result of `10 + 5 * 3`?",
+        options: [
+            "45",
+            "25",
+            "18",
+            "30"
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Python follows the order of operations. Multiplication (`*`) happens before addition (`+`). So, `5 * 3` is `15`, plus `10` creates `25`.",
         example: `# Parentheses can be used to change the order\nresult = (10 + 5) * 3 # result will be 45\nprint(result)`,
         coinReward: 1
     },
@@ -58,10 +71,15 @@ export const PYTHON_CHALLENGES: PythonChallenge[] = [
         level: 4,
         title: "String Concatenation",
         topicExplanation: "'Concatenation' is a fancy word for joining strings (pieces of text) together. In Python, you can use the `+` operator to connect two or more strings into one.",
-        question: "Combine the strings 'Python' and 'Rocks' and print the result.",
-        initialCode: "part1 = \"Python\"\npart2 = \"Rocks\"\n# Combine and print\n",
-        expectedOutput: "PythonRocks",
-        explanation: "The `+` operator can be used to concatenate (join) strings in Python. It joins them directly without adding any spaces. To add a space, you would need to include it, like `print(part1 + ' ' + part2)`.",
+        question: "Which operator is used to join two strings together?",
+        options: [
+            "&",
+            ".",
+            "+",
+            ","
+        ],
+        correctAnswerIndex: 2,
+        explanation: "The `+` operator is used to concatenate (join) strings in Python. For example, `'Hello ' + 'World'` becomes `'Hello World'`.",
         example: `greeting = "Hi there, "\nname = "Casey"\nwelcome_message = greeting + name\nprint(welcome_message) # Output: Hi there, Casey`,
         coinReward: 0
     },
@@ -69,10 +87,15 @@ export const PYTHON_CHALLENGES: PythonChallenge[] = [
         level: 5,
         title: "Data Types",
         topicExplanation: "Data types are classifications that tell Python what kind of data a variable holds. Common types include strings (text), integers (whole numbers), and floats (numbers with decimals).",
-        question: "Print the type of the value `12.5`.",
-        initialCode: "value = 12.5\n# Print the type of value\n",
-        expectedOutput: "<class 'float'>",
-        explanation: "In Python, numbers with a decimal point are called 'floats' (floating-point numbers). 'Integers' are whole numbers without a decimal part.",
+        question: "What is the data type of the value `12.5`?",
+        options: [
+            "int",
+            "str",
+            "float",
+            "bool"
+        ],
+        correctAnswerIndex: 2,
+        explanation: "Numbers with decimal points are called floating-point numbers, or `float`. Integers (`int`) are whole numbers.",
         example: `my_integer = 100\nmy_float = 3.14\nmy_string = "Hello!"\nmy_boolean = True\n\nprint(type(my_float)) # Output: <class 'float'>`,
         coinReward: 0
     },
