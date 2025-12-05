@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { User, Page } from '../types';
 import Logo from './icons/Logo';
 import Avatar from './Avatar';
 import CoinIcon from './icons/CoinIcon';
+import { ThemeContext } from '../contexts/ThemeContext';
 
 interface NavbarProps {
     user: User;
@@ -13,6 +14,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ user, onNavigate, onLogout, currentPage, onOpenSettings }) => {
+    const { theme } = useContext(ThemeContext);
 
     // A single source of truth for navigation links.
     // Guests can see challenge/leaderboard pages but will get an access denied message on those pages.
@@ -50,7 +52,11 @@ const Navbar: React.FC<NavbarProps> = ({ user, onNavigate, onLogout, currentPage
             <nav className="container mx-auto px-4 flex justify-between items-center h-20">
                 <div className="flex items-center gap-8">
                     <button onClick={() => onNavigate('practice')} className="flex items-center gap-2 h-12">
+                        {theme.id === 'strangerThings' ? (
+                            <img src="/assets/stranger_things_logo.png" alt="Stranger Things X Caps Lock" className="h-full w-auto object-contain" />
+                        ) : (
                             <Logo className="h-full w-auto" />
+                        )}
                     </button>
                     {/* Desktop Links */}
                     <div className="hidden md:flex items-center gap-6">
@@ -90,7 +96,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, onNavigate, onLogout, currentPage
                                     <span className="hidden lg:block font-semibold text-[var(--color-text)]">{user.username}</span>
                                 </button>
                                 {/* Profile dropdown contains all links, serving as primary nav on mobile */}
-                                <div className="absolute top-full right-0 mt-2 w-48 bg-[var(--color-bg)] rounded-sm border border-[var(--color-border)] shadow-lg hidden group-hover:block" style={{zIndex: 50}}>
+                                <div className="absolute top-full right-0 mt-2 w-48 bg-[var(--color-bg)] rounded-sm border border-[var(--color-border)] shadow-lg hidden group-hover:block" style={{ zIndex: 50 }}>
                                     <div className="flex sm:hidden items-center gap-2 p-2 border-b border-[var(--color-border)]">
                                         <CoinIcon className="h-6 w-6" />
                                         <span className="font-bold text-lg text-[var(--color-text)]">{user.coins || 0}</span>
@@ -105,7 +111,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, onNavigate, onLogout, currentPage
                                     <button onClick={onLogout} className="block w-full text-left px-4 py-2 text-[var(--color-text-muted)] hover:bg-[var(--color-secondary)]">Logout</button>
                                 </div>
                             </div>
-                             <button
+                            <button
                                 onClick={onLogout}
                                 className="hidden md:block btn-vintage font-bold py-2 px-4 rounded-sm text-sm"
                                 aria-label="Logout"

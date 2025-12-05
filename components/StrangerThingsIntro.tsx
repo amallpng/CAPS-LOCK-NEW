@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
 
 const StrangerThingsIntro: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
-    const [show, setShow] = useState(true);
+  const [show, setShow] = useState(true);
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setShow(false);
-            onComplete();
-        }, 4000); // 4 seconds intro
-        return () => clearTimeout(timer);
-    }, [onComplete]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShow(false);
+      onComplete();
+    }, 4000); // 4 seconds intro
+    return () => clearTimeout(timer);
+  }, [onComplete]);
 
-    if (!show) return null;
+  if (!show) return null;
 
-    return (
-        <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden">
-            <style>{`
+  return (
+    <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden">
+      <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Benguiat:wght@700&display=swap');
         
         .st-container {
@@ -43,10 +43,15 @@ const StrangerThingsIntro: React.FC<{ onComplete: () => void }> = ({ onComplete 
         }
 
         /* Animation Delays for each letter to create the "coming together" effect */
+        /* Animation Delays for each letter to create the "coming together" effect */
         .st-title span:nth-child(1) { animation-delay: 0.1s; transform: translateX(-100px) scale(0.8); }
         .st-title span:nth-child(2) { animation-delay: 0.3s; transform: translateY(-100px) scale(1.2); }
         .st-title span:nth-child(3) { animation-delay: 0.5s; transform: translateX(100px) scale(0.9); }
         .st-title span:nth-child(4) { animation-delay: 0.2s; transform: translateY(100px) scale(1.1); }
+        .st-title span:nth-child(5) { animation-delay: 0.4s; transform: translateX(-50px) scale(1.05); }
+        .st-title span:nth-child(6) { animation-delay: 0.6s; transform: translateY(-50px) scale(0.95); }
+        .st-title span:nth-child(7) { animation-delay: 0.35s; transform: translateX(50px) scale(1.1); }
+        .st-title span:nth-child(8) { animation-delay: 0.55s; transform: translateY(50px) scale(0.85); }
         
         .st-bar {
           position: absolute;
@@ -102,18 +107,25 @@ const StrangerThingsIntro: React.FC<{ onComplete: () => void }> = ({ onComplete 
 
       `}</style>
 
-            <div className="st-container flex flex-col items-center">
-                <div className="st-bar top"></div>
-                <h1 className="st-title">
-                    <span>C</span><span>A</span><span>P</span><span>S</span>
-                </h1>
-                <h1 className="st-title" style={{ fontSize: '5rem', marginTop: '-20px', letterSpacing: '0.5rem' }}>
-                    <span>L</span><span>O</span><span>C</span><span>K</span>
-                </h1>
-                <div className="st-bar bottom"></div>
-            </div>
-        </div>
-    );
+      <div className="st-container flex flex-col items-center">
+        <div className="st-bar top"></div>
+        <h1 className="st-title" style={{ fontSize: '4rem', marginBottom: '-10px' }}>
+          <span>S</span><span>T</span><span>R</span><span>A</span><span>N</span><span>G</span><span>E</span><span>R</span>
+        </h1>
+        <h1 className="st-title" style={{ fontSize: '4rem', marginTop: '-10px' }}>
+          <span>T</span><span>H</span><span>I</span><span>N</span><span>G</span><span>S</span>
+        </h1>
+        <div className="my-4 text-red-600 font-bold text-2xl animate-pulse">X</div>
+        <h1 className="st-title" style={{ fontSize: '6rem', letterSpacing: '0.5rem' }}>
+          <span>C</span><span>A</span><span>P</span><span>S</span>
+        </h1>
+        <h1 className="st-title" style={{ fontSize: '6rem', marginTop: '-20px', letterSpacing: '0.5rem' }}>
+          <span>L</span><span>O</span><span>C</span><span>K</span>
+        </h1>
+        <div className="st-bar bottom"></div>
+      </div>
+    </div>
+  );
 };
 
 export default StrangerThingsIntro;
