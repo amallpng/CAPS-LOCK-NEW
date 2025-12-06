@@ -3,6 +3,7 @@ import { User, Task } from '../types';
 import { PYTHON_CHALLENGES, PythonChallenge } from '../services/pythonChallengeService';
 import Badge from './Badge';
 import CoinIcon from './icons/CoinIcon';
+import PythonIDE from './PythonIDE';
 
 
 const LearnPythonPage: React.FC<{ user: User; onUserUpdate: (user: User) => void; }> = ({ user, onUserUpdate }) => {
@@ -336,30 +337,49 @@ const LearnPythonPage: React.FC<{ user: User; onUserUpdate: (user: User) => void
                             )}
                         </div>
 
-                        {/* Question Section */}
-                        <div className="w-full p-6 bg-[var(--color-bg)] border-2 border-[var(--color-text)] rounded-sm shadow-md">
-                            <div className="mb-6">
+                        {/* Question Section with IDE */}
+                        <div className="w-full bg-[var(--color-bg)] border-2 border-[var(--color-text)] rounded-sm shadow-md overflow-hidden">
+                            <div className="p-6 border-b-2 border-[var(--color-text)]">
                                 <h3 className="text-xl font-bold text-[var(--color-primary)] mb-2">Challenge:</h3>
-                                <p className="text-lg text-[var(--color-text)]">{activeChallenge.question}</p>
+                                <p className="text-lg text-[var(--color-text)] mb-4">{activeChallenge.question}</p>
+
+                                {activeChallenge.codeSnippet && (
+                                    <div className="bg-gray-800 text-white p-4 rounded-sm text-sm font-mono whitespace-pre-wrap overflow-x-auto mb-4 border-l-4 border-gray-600">
+                                        <code>{activeChallenge.codeSnippet}</code>
+                                    </div>
+                                )}
+
+                                <div className="mb-2">
+                                    <p className="text-sm text-[var(--color-text-muted)] font-bold uppercase tracking-wider mb-2">Workspace</p>
+                                    <div className="h-[400px] w-full">
+                                        <PythonIDE
+                                            initialCode={activeChallenge.example && !activeChallenge.codeSnippet ? activeChallenge.example : ""}
+                                        />
+                                    </div>
+                                </div>
                             </div>
 
-                            {activeChallenge.codeSnippet && (
-                                <pre className="bg-gray-800 text-white p-4 rounded-sm text-base font-mono whitespace-pre-wrap overflow-x-auto mb-6">
-                                    <code>{activeChallenge.codeSnippet}</code>
-                                </pre>
-                            )}
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                                {activeChallenge.options?.map((option, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => setSelectedAnswer(index)}
-                                        disabled={isAnswered}
-                                        className={`p-4 text-left font-mono text-base rounded-sm border-2 transition-all duration-300 ${getOptionClass(index)}`}
-                                    >
-                                        {option}
-                                    </button>
-                                ))}
+                            <div className="p-6 bg-[var(--color-secondary)]/10">
+                                <p className="text-sm text-[var(--color-text-muted)] mb-3 font-semibold text-center italic">
+                                    Select the correct answer based on your code (or knowledge):
+                                </p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {activeChallenge.options?.map((option, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => setSelectedAnswer(index)}
+                                            disabled={isAnswered}
+                                            className={`p-4 text-left font-mono text-base rounded-sm border-2 transition-all duration-300 relative group ${getOptionClass(index)}`}
+                                        >
+                                            <span className="absolute left-2 top-2 text-[10px] font-bold opacity-50 border border-current px-1 rounded-sm">
+                                                {String.fromCharCode(65 + index)}
+                                            </span>
+                                            <span className="pl-6 block break-words">
+                                                {option}
+                                            </span>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
 
                             <div className="h-10 relative mb-2">
