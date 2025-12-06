@@ -152,7 +152,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] relative">
+    <div className="flex flex-col min-h-screen text-[var(--color-text)] relative">
       {currentUser && <Navbar user={currentUser} onNavigate={setCurrentPage} onLogout={handleLogout} currentPage={currentPage} onOpenSettings={() => setIsSettingsModalOpen(true)} />}
       {!currentUser && currentPage === 'leaderboard' && (
         <header className="w-full bg-[var(--color-secondary)] border-b-2 border-[var(--color-text)] shadow-md h-20 flex items-center justify-center">
