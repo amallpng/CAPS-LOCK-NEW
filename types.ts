@@ -24,7 +24,7 @@ export interface User {
   coins: number;
   hasClaimedShareReward?: boolean;
   hasRevealedGrandReward?: boolean;
-
+  dob?: string;
 }
 
 export type Page = 'login' | 'register' | 'practice' | 'challenge' | 'profile' | 'leaderboard' | 'about' | 'imageGenerator' | 'videoGenerator';

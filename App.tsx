@@ -94,12 +94,12 @@ const App: React.FC = () => {
     setShowOnboarding(false);
   };
 
-  const handleChallengeSignup = (name: string, email: string) => {
+  const handleChallengeSignup = (name: string, dob: string) => {
     if (!currentUser) return;
     const updatedUser = {
       ...currentUser,
       username: name,
-      email: email,
+      dob: dob,
       isFirstLogin: false,
       isChallengeParticipant: true,
     };
