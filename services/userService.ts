@@ -1,5 +1,5 @@
 import { supabase } from './supabaseClient';
-import { User } from '../types';
+import { User, PrizeClaim } from '../types';
 
 const TABLE_NAME = 'users_public';
 
@@ -127,7 +127,9 @@ export const userService = {
                 coins: user.coins,
                 bestWpm: user.bestWpm,
                 profilePic: user.profilePic,
-                streak: user.streak
+                streak: user.streak,
+                // Admin fields
+                isBlocked: user.isBlocked,
             };
 
             const { error } = await supabase
@@ -137,6 +139,50 @@ export const userService = {
             if (error) {
                 console.error('Error syncing user to Supabase:', error);
             }
+        }
+    },
+
+    async updateUser(user: User): Promise<void> {
+        await this.syncUser(user);
+    },
+
+    async deleteUser(userId: string): Promise<void> {
+        // 1. Delete Local
+        const users = this.getLocalUsers();
+        const newUsers = users.filter(u => u.id !== userId);
+        localStorage.setItem('users', JSON.stringify(newUsers));
+
+        // 2. Delete Remote
+        if (isSupabaseConfigured()) {
+            const { error } = await supabase
+                .from(TABLE_NAME)
+                .delete()
+                .eq('id', userId);
+
+            if (error) {
+                console.error('Error deleting user from Supabase:', error);
+            }
+        }
+    },
+
+    async getAllPrizeClaims(): Promise<PrizeClaim[]> {
+        // Check Supabase first
+        if (isSupabaseConfigured()) {
+            const { data, error } = await supabase
+                .from('prize_claims')
+                .select('*')
+                .order('date', { ascending: false });
+
+            if (!error && data) {
+                return data as PrizeClaim[];
+            }
+        }
+
+        // Fallback to local storage (mock implementation or actual local storage key)
+        try {
+            return JSON.parse(localStorage.getItem('prize_claims') || '[]');
+        } catch {
+            return [];
         }
     },
 

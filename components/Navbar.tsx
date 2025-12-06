@@ -24,6 +24,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, onNavigate, onLogout, currentPage
         { page: 'leaderboard', label: 'Leaderboard' },
 
         { page: 'about', label: 'About' },
+        ...((user.email === 'admin@capslock' && user.provider === 'google') ? [{ page: 'admin' as Page, label: 'Admin' }] : []),
     ];
 
     const handleCoinClick = () => {
