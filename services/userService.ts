@@ -139,5 +139,32 @@ export const userService = {
                 console.error('Error syncing user to Supabase:', error);
             }
         }
+    },
+
+    /**
+     * Subscribe to real-time updates for the leaderboard.
+     * Returns an unsubscribe function.
+     */
+    subscribeToLeaderboard(onUpdate: () => void): (() => void) | null {
+        if (!isSupabaseConfigured()) return null;
+
+        const channel = supabase
+            .channel('leaderboard_changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: TABLE_NAME
+                },
+                () => {
+                    onUpdate();
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }
 };

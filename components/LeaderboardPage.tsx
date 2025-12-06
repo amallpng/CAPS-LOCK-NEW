@@ -14,16 +14,26 @@ const LeaderboardPage: React.FC<LeaderboardPageProps> = ({ currentUser, onBack }
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const fetchLeaderboard = async () => {
-            setIsLoading(true);
+        const fetchLeaderboard = async (showLoading = true) => {
+            if (showLoading) setIsLoading(true);
             const users = await userService.getAllUsers();
             const sorted = [...users]
                 .filter(u => !u.isGuest)
                 .sort((a, b) => (b.bestWpm || 0) - (a.bestWpm || 0));
             setSortedUsers(sorted);
-            setIsLoading(false);
+            if (showLoading) setIsLoading(false);
         };
+
         fetchLeaderboard();
+
+        // Subscribe to real-time updates
+        const unsubscribe = userService.subscribeToLeaderboard(() => {
+            fetchLeaderboard(false);
+        });
+
+        return () => {
+            if (unsubscribe) unsubscribe();
+        };
     }, []);
 
     return (
