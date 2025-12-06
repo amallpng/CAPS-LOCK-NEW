@@ -21,7 +21,7 @@ import { userService } from './services/userService';
 import { ThemeContext } from './contexts/ThemeContext';
 import { useContext } from 'react';
 
-import IntroAnimation from './components/IntroAnimation';
+
 
 const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -32,7 +32,7 @@ const App: React.FC = () => {
 
   const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [showIntro, setShowIntro] = useState(true);
+
 
 
 
@@ -156,7 +156,7 @@ const App: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen text-[var(--color-text)] relative">
-      {showIntro && <IntroAnimation onComplete={() => setShowIntro(false)} />}
+
       {currentUser && <Navbar user={currentUser} onNavigate={setCurrentPage} onLogout={handleLogout} currentPage={currentPage} onOpenSettings={() => setIsSettingsModalOpen(true)} />}
       {!currentUser && currentPage === 'leaderboard' && (
         <header className="w-full bg-[var(--color-secondary)] border-b-2 border-[var(--color-text)] shadow-md h-20 flex items-center justify-center">

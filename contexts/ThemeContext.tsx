@@ -16,10 +16,10 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [themeId, setThemeId] = useState(() => {
     try {
       const storedThemeId = localStorage.getItem('theme-id');
-      // Default to 'stranger-things' if not set
-      return storedThemeId && themes.find(t => t.id === storedThemeId) ? storedThemeId : 'stranger-things';
+      // Default to 'typewriter' if not set
+      return storedThemeId && themes.find(t => t.id === storedThemeId) ? storedThemeId : 'typewriter';
     } catch {
-      return 'stranger-things';
+      return 'typewriter';
     }
   });
 
