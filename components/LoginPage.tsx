@@ -47,7 +47,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onSwitchToRegister }) =>
     e.preventDefault();
     setError('');
 
-    if (!/\S+@\S+\.\S+/.test(email) && email !== 'admin@capslock') {
+    if (!/\S+@\S+\.\S+/.test(email)) {
       setError("Please enter a valid email address.");
       return;
     }

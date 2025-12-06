@@ -16,7 +16,6 @@ import TutorialModal from './components/TutorialModal';
 import SettingsModal from './components/SettingsModal';
 import ImageGeneratorPage from './components/ImageGeneratorPage';
 import VideoGeneratorPage from './components/VideoGeneratorPage';
-import AdminDashboard from './components/AdminDashboard';
 import { userService } from './services/userService';
 
 import { ThemeContext } from './contexts/ThemeContext';
@@ -72,11 +71,7 @@ const App: React.FC = () => {
     if (user.isFirstLogin === true && !user.isGuest) {
       setShowOnboarding(true);
     }
-    if (user.email === 'admin@capslock' && user.provider === 'google') {
-      setCurrentPage('admin');
-    } else {
-      setCurrentPage('practice');
-    }
+    setCurrentPage('practice');
   };
 
   const handleLogout = useCallback(() => {
@@ -154,8 +149,6 @@ const App: React.FC = () => {
         return <ImageGeneratorPage />;
       case 'videoGenerator':
         return <VideoGeneratorPage />;
-      case 'admin':
-        return <AdminDashboard />;
       default:
         return <TypingTest user={currentUser} onUserUpdate={handleUserUpdate} />;
     }
