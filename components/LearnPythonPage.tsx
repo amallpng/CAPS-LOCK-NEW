@@ -9,6 +9,7 @@ import PythonIDE from './PythonIDE';
 const LearnPythonPage: React.FC<{ user: User; onUserUpdate: (user: User) => void; }> = ({ user, onUserUpdate }) => {
     const [activeChallenge, setActiveChallenge] = useState<PythonChallenge | null>(null);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+    const [lastOutput, setLastOutput] = useState('');
 
     const [isAnswered, setIsAnswered] = useState(false);
     const [feedback, setFeedback] = useState<{ type: 'correct' | 'incorrect'; message: string } | null>(null);
@@ -100,6 +101,7 @@ const LearnPythonPage: React.FC<{ user: User; onUserUpdate: (user: User) => void
         const challenge = PYTHON_CHALLENGES.find(c => c.level === level) || null;
         setActiveChallenge(challenge);
         setSelectedAnswer(null);
+        setLastOutput('');
         setIsAnswered(false);
         setFeedback(null);
     }, []);
@@ -114,18 +116,27 @@ const LearnPythonPage: React.FC<{ user: User; onUserUpdate: (user: User) => void
 
         let correct = false;
 
-        if (selectedAnswer !== null && activeChallenge.correctAnswerIndex !== undefined) {
-            // Multiple choice
+        // Check if output matches expected
+        if (activeChallenge.expectedOutput) {
+            const cleanOutput = lastOutput.trim().replace(/\r\n/g, '\n');
+            const cleanExpected = activeChallenge.expectedOutput.trim().replace(/\r\n/g, '\n');
+            correct = cleanOutput === cleanExpected;
+        } else if (activeChallenge.correctAnswerIndex !== undefined && selectedAnswer !== null) {
+            // Fallback for logic challenges without output checks
             correct = selectedAnswer === activeChallenge.correctAnswerIndex;
         } else {
-            return; // Nothing selected
+            // No validation method found or no answer
+            if (!activeChallenge.expectedOutput && activeChallenge.correctAnswerIndex !== undefined) {
+                // It's a legacy MCQ without selection?
+                return;
+            }
         }
 
         setIsAnswered(true);
 
         if (correct) {
             const earnedCoins = activeChallenge.coinReward || 0;
-            let feedbackMessage = '✅ Correct!';
+            let feedbackMessage = '✅ Correct Output!';
 
             if (earnedCoins > 0) {
                 setCoinNotification({ amount: earnedCoins, key: Date.now() });
@@ -153,14 +164,16 @@ const LearnPythonPage: React.FC<{ user: User; onUserUpdate: (user: User) => void
                 }
             });
 
-            const maxAttempts = 5; // Increased for coding
+            const maxAttempts = 10; // Increased even more for debugging/coding
             if (newAttempts >= maxAttempts) {
-                setFeedback({ type: 'incorrect', message: '❌ Incorrect. Out of daily attempts. The quiz is now locked for 24 hours.' });
+                setFeedback({ type: 'incorrect', message: '❌ Incorrect. Out of daily attempts. Locked for 24h.' });
                 setIsDailyLocked(true);
             } else {
-                const msg = activeChallenge.expectedOutput
-                    ? `❌ Incorrect output. Try again! (${maxAttempts - newAttempts} attempts left)`
-                    : `❌ Incorrect. You have ${maxAttempts - newAttempts} daily attempt(s) left.`;
+                let msg = '❌ Incorrect output.';
+                if (activeChallenge.expectedOutput) {
+                    msg += `\nExpected:\n${activeChallenge.expectedOutput}\n\nYour Output:\n${lastOutput.trim() || "(No Output)"}`;
+                }
+                msg += `\n(${maxAttempts - newAttempts} attempts left)`;
                 setFeedback({ type: 'incorrect', message: msg });
             }
         }
@@ -220,9 +233,11 @@ const LearnPythonPage: React.FC<{ user: User; onUserUpdate: (user: User) => void
 
     const renderActionButton = () => {
         if (!isAnswered) {
-            const disabled = selectedAnswer === null;
+            // Enable if coding challenge (expectedOutput exists) OR if MCQ and answer selected
+            const canSubmit = !!(activeChallenge?.expectedOutput) || (selectedAnswer !== null);
+
             return (
-                <button onClick={handleSubmit} disabled={disabled} className="w-full btn-vintage font-bold py-3 px-4 rounded-sm text-lg disabled:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed">
+                <button onClick={handleSubmit} disabled={!canSubmit} className="w-full btn-vintage font-bold py-3 px-4 rounded-sm text-lg disabled:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed">
                     Submit Answer
                 </button>
             );
@@ -353,33 +368,16 @@ const LearnPythonPage: React.FC<{ user: User; onUserUpdate: (user: User) => void
                                     <p className="text-sm text-[var(--color-text-muted)] font-bold uppercase tracking-wider mb-2">Workspace</p>
                                     <div className="h-[400px] w-full">
                                         <PythonIDE
-                                            initialCode={activeChallenge.example && !activeChallenge.codeSnippet ? activeChallenge.example : ""}
+                                            initialCode={activeChallenge.initialCode || activeChallenge.example || ""}
+                                            onOutputChange={(out) => setLastOutput(out)}
                                         />
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="p-6 bg-[var(--color-secondary)]/10">
-                                <p className="text-sm text-[var(--color-text-muted)] mb-3 font-semibold text-center italic">
-                                    Select the correct answer based on your code (or knowledge):
-                                </p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {activeChallenge.options?.map((option, index) => (
-                                        <button
-                                            key={index}
-                                            onClick={() => setSelectedAnswer(index)}
-                                            disabled={isAnswered}
-                                            className={`p-4 text-left font-mono text-base rounded-sm border-2 transition-all duration-300 relative group ${getOptionClass(index)}`}
-                                        >
-                                            <span className="absolute left-2 top-2 text-[10px] font-bold opacity-50 border border-current px-1 rounded-sm">
-                                                {String.fromCharCode(65 + index)}
-                                            </span>
-                                            <span className="pl-6 block break-words">
-                                                {option}
-                                            </span>
-                                        </button>
-                                    ))}
-                                </div>
+                            <div className="p-4 bg-[var(--color-secondary)]/10 text-center text-sm text-[var(--color-text-muted)] italic">
+                                Write your code in the workspace above and click "Run Code". <br />
+                                Then click "Submit Output" to check if you got it right!
                             </div>
 
                             <div className="h-10 relative mb-2">
