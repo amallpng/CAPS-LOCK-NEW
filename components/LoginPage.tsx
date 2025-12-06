@@ -7,7 +7,7 @@ import { userService } from '../services/userService';
 interface LoginPageProps {
   onLogin: (user: User) => void;
   onSwitchToRegister: () => void;
-  onShowLeaderboard: () => void;
+
 }
 
 const GoogleIcon = () => (
@@ -19,7 +19,7 @@ const GoogleIcon = () => (
   </svg>
 );
 
-const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onSwitchToRegister, onShowLeaderboard }) => {
+const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onSwitchToRegister }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -204,14 +204,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onSwitchToRegister, onSh
             >
               Login as Guest
             </button>
-            <button
-              type="button"
-              onClick={onShowLeaderboard}
-              className="w-full btn-vintage flex items-center justify-center gap-3 font-bold py-2 px-4 rounded-sm group"
-            >
-              <span className="group-hover:scale-110 transition-transform">🏆</span>
-              View Leaderboard
-            </button>
+
           </div>
 
           <p className="mt-6 text-center text-[var(--color-text-muted)]">

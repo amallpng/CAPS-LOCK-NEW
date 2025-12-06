@@ -126,7 +126,7 @@ const App: React.FC = () => {
         case 'register':
           return <RegisterPage onRegisterSuccess={() => setCurrentPage('login')} onSwitchToLogin={() => setCurrentPage('login')} />;
         default:
-          return <LoginPage onLogin={handleLogin} onSwitchToRegister={() => setCurrentPage('register')} onShowLeaderboard={() => setCurrentPage('leaderboard')} />;
+          return <LoginPage onLogin={handleLogin} onSwitchToRegister={() => setCurrentPage('register')} />;
       }
     }
 
