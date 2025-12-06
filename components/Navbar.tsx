@@ -22,8 +22,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, onNavigate, onLogout, currentPage
         { page: 'practice', label: 'Practice' },
         { page: 'challenge', label: 'Challenges' },
         { page: 'leaderboard', label: 'Leaderboard' },
-        // 'Learn Python' is only for registered, participating users.
-        ...(!user.isGuest && user.isChallengeParticipant ? [{ page: 'learnPython' as Page, label: 'Learn Python' }] : []),
+
         { page: 'about', label: 'About' },
     ];
 

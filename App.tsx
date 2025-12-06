@@ -10,7 +10,7 @@ import { User, Page } from './types';
 import LeaderboardPage from './components/LeaderboardPage';
 import AboutPage from './components/AboutPage';
 import ChallengeSignupModal from './components/ChallengeSignupModal';
-import LearnPythonPage from './components/LearnPythonPage';
+
 import PrivacyPolicyModal from './components/PrivacyPolicyModal';
 import TutorialModal from './components/TutorialModal';
 import SettingsModal from './components/SettingsModal';
@@ -39,21 +39,7 @@ const App: React.FC = () => {
       const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
       const loggedInUser = users.find(u => u.id === loggedInUserId);
       if (loggedInUser) {
-        // Data migration for python challenge progress
-        if (loggedInUser.pythonChallengeProgress) {
-          if ('code' in loggedInUser.pythonChallengeProgress) {
-            const newProgress = { currentLevel: loggedInUser.pythonChallengeProgress.currentLevel };
-            loggedInUser.pythonChallengeProgress = newProgress;
-          }
-          if (loggedInUser.pythonChallengeProgress.attemptsToday === undefined) {
-            loggedInUser.pythonChallengeProgress.attemptsToday = 0;
-          }
-          if (loggedInUser.pythonChallengeProgress.lastAttemptTimestamp === undefined) {
-            loggedInUser.pythonChallengeProgress.lastAttemptTimestamp = 0;
-          }
-        } else {
-          loggedInUser.pythonChallengeProgress = { currentLevel: 1, attemptsToday: 0, lastAttemptTimestamp: 0 };
-        }
+
 
         const { password, ...userToLogin } = loggedInUser;
         setCurrentUser(userToLogin as User);
@@ -155,8 +141,7 @@ const App: React.FC = () => {
         return <LeaderboardPage currentUser={currentUser} />;
       case 'about':
         return <AboutPage onOpenPrivacyModal={() => setIsPrivacyModalOpen(false)} />;
-      case 'learnPython':
-        return <LearnPythonPage user={currentUser} onUserUpdate={handleUserUpdate} />;
+
       case 'imageGenerator':
         return <ImageGeneratorPage />;
       case 'videoGenerator':

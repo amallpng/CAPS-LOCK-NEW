@@ -127,8 +127,7 @@ export const userService = {
                 coins: user.coins,
                 bestWpm: user.bestWpm,
                 profilePic: user.profilePic,
-                streak: user.streak,
-                python_progress: user.pythonChallengeProgress
+                streak: user.streak
             };
 
             const { error } = await supabase

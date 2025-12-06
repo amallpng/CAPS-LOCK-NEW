@@ -24,15 +24,10 @@ export interface User {
   coins: number;
   hasClaimedShareReward?: boolean;
   hasRevealedGrandReward?: boolean;
-  pythonChallengeProgress: {
-    currentLevel: number;
-    attemptsToday?: number;
-    lastAttemptTimestamp?: number;
-    pythonCourseStartDate?: number;
-  };
+
 }
 
-export type Page = 'login' | 'register' | 'practice' | 'challenge' | 'profile' | 'leaderboard' | 'about' | 'learnPython' | 'imageGenerator' | 'videoGenerator';
+export type Page = 'login' | 'register' | 'practice' | 'challenge' | 'profile' | 'leaderboard' | 'about' | 'imageGenerator' | 'videoGenerator';
 
 export enum Difficulty {
   Easy = 'easy',
