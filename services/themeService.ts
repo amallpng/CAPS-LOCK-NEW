@@ -2,6 +2,20 @@ import { Theme } from '../types';
 
 export const themes: Theme[] = [
   {
+    id: 'stranger-things',
+    name: 'Special Edition',
+    colors: {
+      bg: '#050505', // Very dark black/grey
+      text: '#FF3333', // Glowing red text
+      primary: '#cc0000', // Deep red
+      secondary: 'rgba(20, 20, 20, 0.8)', // Semi-transparent dark
+      border: '#8b0000', // Dark red border
+      error: '#ff0000',
+      'text-muted': '#a0a0a0',
+    },
+    backgroundImage: '/upside-down-bg.png',
+  },
+  {
     id: 'typewriter',
     name: 'Typewriter',
     colors: {
